@@ -12,6 +12,7 @@ const formData = ref({
 })
 
 const submittedCards = ref([])
+const successMessage = ref('')
 
 onMounted(() => {
   const storedCards = localStorage.getItem('submittedCards')
@@ -52,6 +53,10 @@ const submitForm = () => {
     submittedCards.value.push({ ...formData.value })
     localStorage.setItem('submittedCards', JSON.stringify(submittedCards.value))
     clearForm()
+    successMessage.value = 'Sign up successful!'
+    setTimeout(() => {
+      successMessage.value = ''
+    }, 10)
   }
 }
 

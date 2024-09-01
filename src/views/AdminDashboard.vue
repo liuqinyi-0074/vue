@@ -6,7 +6,7 @@ import Column from 'primevue/column'
 const users = ref([])
 
 onMounted(() => {
-  const storedUsers = JSON.parse(localStorage.getItem('users')) || []
+  const storedUsers = JSON.parse(localStorage.getItem('submittedCards')) || []
   users.value = storedUsers
 })
 </script>
@@ -19,7 +19,7 @@ onMounted(() => {
 
     <div class="row mt-5">
       <h4>This is a PrimeVue Datatable.</h4>
-      <DataTable :value="users.value" tableStyle="min-width: 50rem">
+      <DataTable :value="users" tableStyle="min-width: 50rem">
         <Column field="username" header="Username"></Column>
         <Column field="password" header="Password"></Column>
         <Column field="isAustralian" header="Australian Resident"></Column>
@@ -28,15 +28,9 @@ onMounted(() => {
       </DataTable>
     </div>
 
-    <!-- Card view for each user -->
-    <div class="row mt-5" v-if="users.value.length">
+    <div class="row mt-5" v-if="users.length">
       <div class="d-flex flex-wrap justify-content-start">
-        <div
-          v-for="(user, index) in users.value"
-          :key="index"
-          class="card m-2"
-          style="width: 18rem"
-        >
+        <div v-for="(user, index) in users" :key="index" class="card m-2" style="width: 18rem">
           <div class="card-header">User Information</div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">Username: {{ user.username }}</li>
@@ -57,9 +51,11 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.form {
-  text-align: center;
-  margin-top: 50px;
+.container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 80vw;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .card {
