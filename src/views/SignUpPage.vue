@@ -1,7 +1,5 @@
 <script setup>
-import { ref } from 'vue'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
+import { ref, onMounted } from 'vue'
 
 const formData = ref({
   username: '',
@@ -15,18 +13,44 @@ const formData = ref({
 
 const submittedCards = ref([])
 
+onMounted(() => {
+  const storedCards = localStorage.getItem('submittedCards')
+  if (storedCards) {
+    submittedCards.value = JSON.parse(storedCards)
+  }
+})
+
 const submitForm = () => {
   validateName(true)
   validatePassword(true)
   validateConfirmPassword(true)
   validateReason(true)
+
+  const usernameExists = submittedCards.value.some(
+    (user) => user.username === formData.value.username
+  )
+  if (usernameExists) {
+    alert('The user name is not available')
+    return
+  }
   if (
     !errors.value.username &&
     !errors.value.password &&
     !errors.value.confirmPassword &&
     !errors.value.reason
   ) {
+    if (formData.value.username.includes('Admin')) {
+      const adminPassword = prompt(
+        'This username contains "Admin". Please enter the admin password:'
+      )
+      if (adminPassword !== 'iamadmin') {
+        alert("You don't have the right to create an admin account")
+        return
+      }
+    }
+
     submittedCards.value.push({ ...formData.value })
+    localStorage.setItem('submittedCards', JSON.stringify(submittedCards.value))
     clearForm()
   }
 }
@@ -109,11 +133,11 @@ const reasonHasFriend = ref(false)
 </script>
 
 <template>
-  <!-- 🗄️ W3. Library Registration Form -->
+  <!--  Social Food Registration Form -->
   <div class="container mt-5">
     <div class="row">
       <div class="col-md-8 offset-md-2">
-        <h1 class="text-center">🗄️ W4. Library Registration Form</h1>
+        <h1 class="text-center">Social Food Web Sign up</h1>
         <p class="text-center">
           This form now includes validation. Registered users are displayed in a data table below
           (PrimeVue).
@@ -213,39 +237,6 @@ const reasonHasFriend = ref(false)
       </div>
     </div>
   </div>
-
-  <div class="row mt-5">
-    <h4>This is a Primevue Datatable.</h4>
-    <DataTable :value="submittedCards" tableStyle="min-width: 50rem">
-      <Column field="username" header="Username"></Column>
-      <Column field="password" header="Password"></Column>
-      <Column field="isAustralian" header="Australian Resident"></Column>
-      <Column field="gender" header="Gender"></Column>
-      <Column field="reason" header="Reason"></Column>
-    </DataTable>
-  </div>
-
-  <div class="row mt-5" v-if="submittedCards.length">
-    <div class="d-flex flex-wrap justify-content-start">
-      <div
-        v-for="(card, index) in submittedCards"
-        :key="index"
-        class="card m-2"
-        style="width: 18rem"
-      >
-        <div class="card-header">User Information</div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">Username: {{ card.username }}</li>
-          <li class="list-group-item">Password: {{ card.password }}</li>
-          <li class="list-group-item">
-            Australian Resident: {{ card.isAustralian ? 'Yes' : 'No' }}
-          </li>
-          <li class="list-group-item">Gender: {{ card.gender }}</li>
-          <li class="list-group-item">Reason: {{ card.reason }}</li>
-        </ul>
-      </div>
-    </div>
-  </div>
 </template>
 
 <style scoped>
@@ -262,24 +253,5 @@ const reasonHasFriend = ref(false)
 .form {
   text-align: center;
   margin-top: 50px;
-}
-
-/* ID selectors */
-#username:focus,
-#password:focus,
-#isAustralian:focus,
-.card {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.card-header {
-  background-color: #275fda;
-  color: white;
-  padding: 10px;
-  border-radius: 10px 10px 0 0;
-}
-.list-group-item {
-  padding: 10px;
 }
 </style>
