@@ -5,24 +5,19 @@
     <header class="d-flex justify-content-center py-3">
       <ul class="nav nav-pills">
         <li class="nav-item">
-          <router-link
-            to="/SignUpPage"
-            class="nav-link"
-            active-class="active"
-            aria-current="Sign up page"
-            >Sign up Page</router-link
-          >
-        </li>
-        <li class="nav-item">
           <router-link to="/HomePage" class="nav-link" active-class="active">Home Page</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/LoginPage" class="nav-link" active-class="active"
-            >Login page</router-link
-          >
+          <router-link to="/LoginPage" class="nav-link" active-class="active">Login page</router-link>
         </li>
         <li class="nav-item">
           <router-link to="/FeedbackPage" class="nav-link" active-class="active">Feedback Page</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/FirebaseSigninView" class="nav-link" active-class="active">Firebase Signin</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/FirebaseRegisterView" class="nav-link" active-class="active">Firebase Register</router-link>
         </li>
       </ul>
     </header>

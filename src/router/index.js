@@ -1,16 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AdminDashboard from '../views/AdminDashboard.vue'
 import LoginPage from '../views/LoginPage.vue'
-import SignUpPage from '../views/SignUpPage.vue'
 import HomePage from '../views/HomePage.vue'
 import FeedbackPage from '../views/FeedbackPage.vue'
+import FirebaseSigninView from '../views/FirebaseSigninView.vue'
+import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 
 const routes = [
-  {
-    path: '/SignUpPage',
-    name: 'SignUpPage',
-    component: SignUpPage
-  },
   { path: '/LoginPage', name: 'LoginPage', component: LoginPage },
   {
     path: '/AdminDashboard',
@@ -18,7 +14,9 @@ const routes = [
     component: AdminDashboard
   },
   { path: '/HomePage', name: 'HomePage', component: HomePage },
-  { path: '/FeedbackPage', name: 'FeedbackPage', component: FeedbackPage }
+  { path: '/FeedbackPage', name: 'FeedbackPage', component: FeedbackPage },
+  { path: '/FirebaseSigninView', name: 'FirebaseSigninView', component: FirebaseSigninView },
+  { path: '/FirebaseRegisterView', name: 'FirebaseRegisterView', component: FirebaseRegisterView }
 ]
 
 const router = createRouter({
