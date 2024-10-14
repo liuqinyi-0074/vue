@@ -1,6 +1,22 @@
+<script setup>
+import { getAuth, signOut } from 'firebase/auth'
+
+import { Alert } from 'bootstrap'
+
+const auth = getAuth()
+const firebaseLogout = () => {
+  signOut(auth)
+    .then(() => {
+      Alert('Sign out Success')
+    })
+    .catch((error) => {
+      console.log('Logout error', error)
+      Alert('Sign out failed')
+    })
+}
+</script>
 <template>
-  <!-- Using Bootstrap's Header template (starter code) -->
-  <!-- https://getbootstrap.com/docs/5.0/examples/headers/ -->
+
   <div class="container">
     <header class="d-flex justify-content-center py-3">
       <ul class="nav nav-pills">
@@ -22,7 +38,40 @@
           >
         </li>
         <li class="nav-item">
-          <router-link to="/FeedbackPage" class="nav-link" active-class="active">Feedback Page</router-link>
+          <router-link to="/FeedbackPage" class="nav-link" active-class="active"
+            >Feedback Page</router-link
+          >
+        </li>
+        <li class="nav-item">
+          <router-link to="/FirebaseRegister" class="nav-link" active-class="active"
+            >Firebase Login</router-link
+          >
+        </li>
+        <li class="nav-item">
+          <router-link to="/FirebaseSigninView" class="nav-link" active-class="active"
+            >Firebase Register</router-link
+          >
+        </li>
+        <li class="nav-item">
+          <router-link to="/addbook" class="nav-link" active-class="active">Add Book</router-link>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" @click="firebaseLogout">Firebase Logout</button>
+        </li>
+        <li class="nav-item">
+          <router-link to="/BookListView" class="nav-link" active-class="active"
+            >Book List</router-link
+          >
+        </li>
+        <li class="nav-item">
+          <router-link to="/GetBookCountView" class="nav-link" active-class="active"
+            >Book Count</router-link
+          >
+        </li>
+        <li class="nav-item">
+          <router-link to="/WeatherView" class="nav-link" active-class="active"
+            >Weather View</router-link
+          >
         </li>
       </ul>
     </header>
