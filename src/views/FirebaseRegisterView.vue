@@ -175,7 +175,11 @@
           successMessage.value = 'Sign up successful!'
           setTimeout(() => {
             successMessage.value = ''
-            router.push('/FireLogin')
+            if (isAdmin) {
+              router.push('/AdminDashboard')
+            } else {
+              router.push('/Home')
+            }
           }, 1000)
         })
         .catch((error) => {

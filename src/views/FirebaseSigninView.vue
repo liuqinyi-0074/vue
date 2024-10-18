@@ -4,7 +4,7 @@
         <div class="col-md-6">
           <h1 class="text-center mb-4">Login Page</h1>
   
-          <!-- 登录表单 -->
+    
           <form @submit.prevent="fireSignin" class="p-4 border rounded shadow">
             <div class="mb-3">
               <label for="username" class="form-label">Email</label>
@@ -51,25 +51,21 @@
   const auth = getAuth()
   const db = getFirestore()
   
-  // 表单数据
   const formData = ref({
     username: '',
     password: ''
   })
   
-  // 错误信息
   const errors = ref({
     username: null,
     password: null
   })
   
-  // Firebase 登录
   const fireSignin = async () => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, formData.value.username, formData.value.password)
       console.log('Firebase Sign in Successful!')
   
-      // 从 Firestore 获取用户角色
       const userDoc = await getDoc(doc(db, 'users', user.uid))
       if (userDoc.exists()) {
         const userData = userDoc.data()

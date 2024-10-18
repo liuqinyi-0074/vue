@@ -1,14 +1,27 @@
+<script setup>
+import { getAuth, signOut } from 'firebase/auth'
+
+import { Alert } from 'bootstrap'
+
+const auth = getAuth()
+const firebaseLogout = () => {
+  signOut(auth)
+    .then(() => {
+      Alert('Sign out Success')
+    })
+    .catch((error) => {
+      console.log('Logout error', error)
+      Alert('Sign out failed')
+    })
+}
+</script>
 <template>
-  <!-- Using Bootstrap's Header template (starter code) -->
-  <!-- https://getbootstrap.com/docs/5.0/examples/headers/ -->
+
   <div class="container">
     <header class="d-flex justify-content-center py-3">
       <ul class="nav nav-pills">
         <li class="nav-item">
           <router-link to="/HomePage" class="nav-link" active-class="active">Home Page</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/LoginPage" class="nav-link" active-class="active">Login page</router-link>
         </li>
         <li class="nav-item">
           <router-link to="/FeedbackPage" class="nav-link" active-class="active">Feedback Page</router-link>
@@ -17,7 +30,13 @@
           <router-link to="/FirebaseSigninView" class="nav-link" active-class="active">Firebase Signin</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/FirebaseRegisterView" class="nav-link" active-class="active">Firebase Register</router-link>
+          <router-link to="/FeedbackPage" class="nav-link" active-class="active">Feedback Page</router-link>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" @click="firebaseLogout">Firebase Logout</button>
+        </li>
+        <li class="nav-item">
+          <router-link to="/mapFirst" class="nav-link" active-class="active">Map</router-link>
         </li>
       </ul>
     </header>

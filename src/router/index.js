@@ -5,6 +5,7 @@ import HomePage from '../views/HomePage.vue'
 import FeedbackPage from '../views/FeedbackPage.vue'
 import FirebaseSigninView from '../views/FirebaseSigninView.vue'
 import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
+import MapFirst from '../components/mapFirst.vue'
 
 const routes = [
   { path: '/LoginPage', name: 'LoginPage', component: LoginPage },
@@ -16,6 +17,7 @@ const routes = [
   { path: '/HomePage', name: 'HomePage', component: HomePage },
   { path: '/FeedbackPage', name: 'FeedbackPage', component: FeedbackPage },
   { path: '/FirebaseSigninView', name: 'FirebaseSigninView', component: FirebaseSigninView },
+  { path: '/mapFirst', name: 'Map', component: MapFirst },
   { path: '/FirebaseRegisterView', name: 'FirebaseRegisterView', component: FirebaseRegisterView }
 ]
 
