@@ -30,13 +30,13 @@ const firebaseLogout = () => {
           <router-link to="/FirebaseSigninView" class="nav-link" active-class="active">Firebase Signin</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/FeedbackPage" class="nav-link" active-class="active">Feedback Page</router-link>
-        </li>
-        <li class="nav-item">
           <button class="nav-link" @click="firebaseLogout">Firebase Logout</button>
         </li>
         <li class="nav-item">
           <router-link to="/mapFirst" class="nav-link" active-class="active">Map</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/FirebaseRegisterView" class="nav-link" active-class="active">Firebase Register</router-link>
         </li>
       </ul>
     </header>
