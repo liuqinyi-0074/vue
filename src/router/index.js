@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AdminDashboard from '../views/AdminDashboard.vue'
-
+import LoginPage from '../views/LoginPage.vue'
 import HomePage from '../views/HomePage.vue'
 import FeedbackPage from '../views/FeedbackPage.vue'
 import FirebaseSigninView from '../views/FirebaseSigninView.vue'
@@ -8,6 +8,7 @@ import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 import MapFirst from '../components/mapFirst.vue'
 
 const routes = [
+  { path: '/LoginPage', name: 'LoginPage', component: LoginPage },
   {
     path: '/AdminDashboard',
     name: 'AdminDashboard',

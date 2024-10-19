@@ -1,303 +1,308 @@
 <template>
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <h1 class="text-center mb-4">Social Food Web Sign Up</h1>
-        <form @submit.prevent="submitForm" class="p-4 border rounded shadow">
-          <!-- Username Field -->
-          <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input
-              type="text"
-              class="form-control"
-              id="username"
-              v-model="formData.username"
-              @blur="validateName(true)"
-              @input="validateName(false)"
-            />
-            <div v-if="errors.username" class="text-danger">{{ errors.username }}</div>
-          </div>
-
-          <!-- Email Field -->
-          <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              v-model="formData.email"
-              @blur="validateEmail(true)"
-              @input="validateEmail(false)"
-            />
-            <div v-if="errors.email" class="text-danger">{{ errors.email }}</div>
-          </div>
-
-          <!-- Password Field -->
-          <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              v-model="formData.password"
-              @blur="validatePassword(true)"
-              @input="validatePassword(false)"
-            />
-            <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
-          </div>
-
-          <!-- Confirm Password Field -->
-          <div class="mb-3">
-            <label for="confirmPassword" class="form-label">Confirm Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="confirmPassword"
-              v-model="formData.confirmPassword"
-              @blur="validateConfirmPassword(true)"
-              @input="validateConfirmPassword(false)"
-            />
-            <div v-if="errors.confirmPassword" class="text-danger">
-              {{ errors.confirmPassword }}
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <h1 class="text-center mb-4">Social Food Web Sign Up</h1>
+          <form @submit.prevent="submitForm" class="p-4 border rounded shadow">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                @blur="() => validateName(true)"
+                @input="() => validateName(false)"
+                v-model="formData.username"
+              />
+              <div v-if="errors.username" class="text-danger">{{ errors.username }}</div>
             </div>
+  
+            <div class="mb-3">
+              <label for="gender" class="form-label">Gender</label>
+              <select class="form-select" id="gender" v-model="formData.gender" required>
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+  
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                @blur="() => validatePassword(true)"
+                @input="() => validatePassword(false)"
+                v-model="formData.password"
+              />
+              <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
+            </div>
+  
+            <div class="mb-3">
+              <label for="confirm-password" class="form-label">Confirm password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="confirm-password"
+                @blur="() => validateConfirmPassword(true)"
+                @input="() => validateConfirmPassword(false)"
+                v-model="formData.confirmPassword"
+              />
+              <div v-if="errors.confirmPassword" class="text-danger">
+                {{ errors.confirmPassword }}
+              </div>
+            </div>
+  
+            <div class="form-check mb-3">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="isAustralian"
+                v-model="formData.isAustralian"
+              />
+              <label class="form-check-label" for="isAustralian">Australian Resident?</label>
+            </div>
+  
+            <div class="mb-3">
+              <label for="reason" class="form-label">Reason for joining</label>
+              <textarea
+                class="form-control"
+                id="reason"
+                rows="3"
+                v-model="formData.reason"
+                @blur="() => validateReason(true)"
+                @input="() => {
+                  validateReason(false)
+                  validateReasonComment(true)
+                }"
+              ></textarea>
+              <div v-if="errors.reason" class="text-danger">{{ errors.reason }}</div>
+              <div v-if="reasonHasFriend" class="text-success">Great to have a friend!</div>
+            </div>
+  
+            <div class="mb-3">
+              <label for="suburb" class="form-label">Suburb</label>
+              <input type="text" class="form-control" id="suburb" v-bind:value="formData.suburb" />
+            </div>
+  
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">Submit</button>
+              <button type="button" class="btn btn-secondary w-100" @click="clearForm">Clear</button>
+            </div>
+          </form>
+  
+          <div v-if="successMessage" class="alert alert-success mt-3 text-center">
+            {{ successMessage }}
           </div>
-
-          <!-- Australian Resident Field -->
-          <div class="mb-3">
-            <label for="australianResident" class="form-label">Are you an Australian resident?</label>
-            <select v-model="formData.isAustralianResident" class="form-control" id="australianResident">
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">Submit</button>
-          </div>
-        </form>
-
-        <!-- Success Message -->
-        <div v-if="successMessage" class="alert alert-success mt-3 text-center">
-          {{ successMessage }}
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Modal for Admin Registration -->
-  <div v-if="showAdminPrompt" class="modal d-block" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Register as Admin</h5>
-        </div>
-        <div class="modal-body">
-          <p>Would you like to register as an Admin?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="setRole('admin')">Yes, Register as Admin</button>
-          <button type="button" class="btn btn-secondary" @click="setRole('user')">No, Register as User</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-import { useRouter } from 'vue-router'
-import { getFirestore, doc, setDoc } from 'firebase/firestore'
-import axios from 'axios'
-
-// Initialize Firestore
-const db = getFirestore()
-
-const formData = ref({
-  username: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  isAustralianResident: 'no'  // Default to 'no'
-})
-
-const errors = ref({
-  username: null,
-  email: null,
-  password: null,
-  confirmPassword: null,
-})
-
-const successMessage = ref('')
-const showAdminPrompt = ref(false) // To show admin registration prompt
-const userId = ref(null)  // To store user ID for later role update
-
-const router = useRouter()
-const auth = getAuth()
-
-// Validation functions (same as before)
-const validateName = (blur) => {
-  if (formData.value.username.length < 3) {
-    errors.value.username = blur ? 'Name must be at least 3 characters long' : null
-  } else {
-    errors.value.username = null
+  </template>
+  
+  <script setup>
+  import { ref, onMounted } from 'vue'
+  import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+  import { getFirestore, doc, setDoc } from 'firebase/firestore'
+  import { useRouter } from 'vue-router'
+  
+  
+  const formData = ref({
+    username: '',
+    password: '',
+    confirmPassword: '',
+    isAustralian: false,
+    reason: '',
+    gender: '',
+    suburb: 'Clayton'
+  })
+  
+  const submittedCards = ref([])
+  const successMessage = ref('')
+  const router = useRouter()
+  const auth = getAuth()
+  const db = getFirestore()
+  
+  onMounted(() => {
+    const storedCards = localStorage.getItem('submittedCards')
+    if (storedCards) {
+      submittedCards.value = JSON.parse(storedCards)
+    }
+  })
+  
+  
+  const submitForm = () => {
+    validateName(true)
+    validatePassword(true)
+    validateConfirmPassword(true)
+    validateReason(true)
+  
+    const usernameExists = submittedCards.value.some(
+      (user) => user.username === formData.value.username
+    )
+    if (usernameExists) {
+      alert('The username is not available')
+      return
+    }
+  
+    
+    if (
+      !errors.value.username &&
+      !errors.value.password &&
+      !errors.value.confirmPassword &&
+      !errors.value.reason
+    ) {
+      
+      const isAdmin = window.confirm('Would you like to register as an admin?')
+  
+      createUserWithEmailAndPassword(auth, formData.value.username, formData.value.password)
+        .then(async (data) => {
+  
+          await setDoc(doc(db, 'users', data.user.uid), {
+            username: formData.value.username,
+            email: formData.value.username,
+            gender: formData.value.gender,
+            suburb: formData.value.suburb,
+            isAustralian: formData.value.isAustralian,
+            reason: formData.value.reason,
+            role: isAdmin ? 'admin' : 'user' 
+          })
+  
+          submittedCards.value.push({ ...formData.value })
+          localStorage.setItem('submittedCards', JSON.stringify(submittedCards.value))
+          clearForm()
+          successMessage.value = 'Sign up successful!'
+          setTimeout(() => {
+            successMessage.value = ''
+            if (isAdmin) {
+              router.push('/AdminDashboard')
+            } else {
+              router.push('/Home')
+            }
+          }, 1000)
+        })
+        .catch((error) => {
+          console.log('Register failed', error)
+          alert('Registration failed: ' + error.message)
+        })
+    }
   }
-}
-
-const validateEmail = (blur) => {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailPattern.test(formData.value.email)) {
-    errors.value.email = blur ? 'Invalid email format' : null
-  } else {
-    errors.value.email = null
-  }
-}
-
-const validatePassword = (blur) => {
-  const password = formData.value.password
-  const minLength = 8
-  if (password.length < minLength) {
-    errors.value.password = blur ? `Password must be at least ${minLength} characters long.` : null
-  } else {
-    errors.value.password = null
-  }
-}
-
-const validateConfirmPassword = (blur) => {
-  if (formData.value.password !== formData.value.confirmPassword) {
-    errors.value.confirmPassword = blur ? 'Passwords do not match' : null
-  } else {
-    errors.value.confirmPassword = null
-  }
-}
-
-// Send welcome email function (same as before)
-const sendWelcomeEmail = async (email) => {
-  try {
-    const response = await axios.get('https://sendemail-23kcp2q4ca-uc.a.run.app', {
-      params: {
-        from: 'liuqinyi1927@gmail.com',
-        to: email,
-        subject: 'Welcome to Social Food Website',
-      },
-    });
-    console.log('Welcome email sent successfully:', response.data);
-  } catch (error) {
-    console.error('Failed to send welcome email:', error);
-  }
-}
-
-const submitForm = async () => {
-  validateName(true)
-  validateEmail(true)
-  validatePassword(true)
-  validateConfirmPassword(true)
-
-  if (errors.value.username || errors.value.email || errors.value.password || errors.value.confirmPassword) {
-    return
-  }
-
-  try {
-    // Create user with email and password
-    const userCredential = await createUserWithEmailAndPassword(auth, formData.value.email, formData.value.password)
-    const user = userCredential.user
-    userId.value = user.uid  // Store user ID for role update
-
-    // Store user data with initial role as 'user' and residency status in Firestore
-    await setDoc(doc(db, 'users', user.uid), {
-      username: formData.value.username,
-      email: formData.value.email,
-      role: 'user',
-      isAustralianResident: formData.value.isAustralianResident
-    })
-
-    successMessage.value = 'Sign up successful!'
-
-    // Clear form after successful registration
-    const userEmail = formData.value.email
+  
+  
+  const clearForm = () => {
     formData.value = {
       username: '',
-      email: '',
       password: '',
       confirmPassword: '',
-      isAustralianResident: 'no'
-    }
-
-    // Send welcome email
-    await sendWelcomeEmail(userEmail)
-
-    // Show admin registration prompt
-    showAdminPrompt.value = true
-  } catch (error) {
-    console.error('Error during registration:', error)
-  }
-}
-
-// Function to set the role and update in Firestore
-const setRole = async (role) => {
-  if (userId.value) {
-    try {
-      await setDoc(doc(db, 'users', userId.value), { role }, { merge: true })
-      successMessage.value = `You are now registered as a ${role}!`
-    } catch (error) {
-      console.error('Error updating role:', error)
+      isAustralian: false,
+      reason: '',
+      gender: '',
+      suburb: 'Clayton'
     }
   }
-  showAdminPrompt.value = false  // Hide the admin prompt modal
-  setTimeout(() => {
-    router.push('/FirebaseSigninView')
-  }, 2000)
-}
-</script>
-
-<style scoped>
-/* Same styles as before */
-.container {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 80vw;
-  margin: 0 auto;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-h1 {
-  font-size: 2rem;
-  color: #333;
-}
-
-input, textarea, select {
-  margin-bottom: 10px;
-}
-
-button {
-  font-size: 1.2rem;
-}
-
-.alert {
-  font-size: 1rem;
-}
-
-.shadow {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.modal {
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.modal-dialog {
-  max-width: 500px;
-}
-
-.modal-content {
-  padding: 20px;
-}
-</style>
+  
+  const errors = ref({
+    username: null,
+    password: null,
+    confirmPassword: null,
+    reason: null
+  })
+  
+ 
+  const validateName = (blur) => {
+    if (formData.value.username.length < 3) {
+      if (blur) errors.value.username = 'Name must be at least 3 characters'
+    } else {
+      errors.value.username = null
+    }
+  }
+  
+  const validatePassword = (blur) => {
+    const password = formData.value.password
+    const minLength = 8
+    const hasUppercase = /[A-Z]/.test(password)
+    const hasLowercase = /[a-z]/.test(password)
+    const hasNumber = /\d/.test(password)
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+  
+    if (password.length < minLength) {
+      if (blur) errors.value.password = `Password must be at least ${minLength} characters long.`
+    } else if (!hasUppercase) {
+      if (blur) errors.value.password = 'Password must contain at least one uppercase letter.'
+    } else if (!hasLowercase) {
+      if (blur) errors.value.password = 'Password must contain at least one lowercase letter.'
+    } else if (!hasNumber) {
+      if (blur) errors.value.password = 'Password must contain at least one number.'
+    } else if (!hasSpecialChar) {
+      if (blur) errors.value.password = 'Password must contain at least one special character.'
+    } else {
+      errors.value.password = null
+    }
+  }
+  
+  const validateConfirmPassword = (blur) => {
+    if (formData.value.password !== formData.value.confirmPassword) {
+      if (blur) errors.value.confirmPassword = 'Passwords do not match.'
+    } else {
+      errors.value.confirmPassword = null
+    }
+  }
+  
+  const validateReason = (blur) => {
+    if (formData.value.reason.length < 5) {
+      if (blur) errors.value.reason = 'Reason must be at least 5 characters'
+    } else {
+      errors.value.reason = null
+    }
+  }
+  
+  const reasonHasFriend = ref(false)
+  const validateReasonComment = (blur) => {
+    if (formData.value.reason.includes('friend')) {
+      if (blur) reasonHasFriend.value = true
+    } else {
+      reasonHasFriend.value = false
+    }
+  }
+  </script>
+  
+  <style scoped>
+  .container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 80vw;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .form {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  input, textarea, select {
+    margin-bottom: 10px;
+  }
+  
+  button {
+    font-size: 1.2rem;
+  }
+  
+  textarea {
+    resize: none;
+  }
+  
+  .alert {
+    font-size: 1rem;
+  }
+  
+  .shadow {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  </style>
