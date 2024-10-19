@@ -1,5 +1,8 @@
 <template>
-  <div id="map" class="map-container"></div>
+  <div>
+    <button class="back-button" @click="goHome">Back to HomePage</button>
+    <div id="map" class="map-container"></div>
+  </div>
 </template>
 
 <script>
@@ -10,18 +13,15 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 export default {
   mounted() {
-    // Mapbox access token
     mapboxgl.accessToken = 'pk.eyJ1IjoicWlueWlsaXUiLCJhIjoiY20yYWJ0NjRrMGVvajJrcHlrOTNqZ3FiZCJ9.7f6Qjb8Mk5lGWrf6BKPUXA';
 
-    // Initialize the map
     const map = new mapboxgl.Map({
-      container: 'map', // container ID
-      style: 'mapbox://styles/mapbox/streets-v12', // map style
-      center: [-79.4512, 43.6568], // starting position [lng, lat]
-      zoom: 8 // starting zoom
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [-79.4512, 43.6568],
+      zoom: 8
     });
 
-    // Add Mapbox Geocoder (for place search)
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
@@ -31,17 +31,19 @@ export default {
       placeholder: 'Search for places',
     });
 
-    // Add geocoder to the map
     map.addControl(geocoder);
 
-
-    // Add more markers dynamically from search results
     geocoder.on('result', (e) => {
       const coords = e.result.geometry.coordinates;
       new mapboxgl.Marker({ color: 'green' })
         .setLngLat(coords)
         .addTo(map);
     });
+  },
+  methods: {
+    goHome() {
+      this.$router.push('/HomePage'); // Navigate to the HomePage route
+    }
   }
 };
 </script>
@@ -49,8 +51,26 @@ export default {
 <style scoped>
 .map-container {
   position: absolute;
-  top: 0;
+  top: 40px; /* Adjusted for the back button */
   bottom: 0;
   width: 100%;
+}
+
+.back-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.back-button:hover {
+  background-color: #d32f2f;
 }
 </style>
