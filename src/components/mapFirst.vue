@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <button class="back-button" @click="goHome">Back to HomePage</button>
-    <div id="map" class="map-container"></div>
-  </div>
+  <button class="back-button" @click="goHome">Back to HomePage</button>
+  <div id="map" class="map-container"></div>
 </template>
 
 <script>
@@ -13,14 +11,17 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 export default {
   mounted() {
+
     mapboxgl.accessToken = 'pk.eyJ1IjoicWlueWlsaXUiLCJhIjoiY20yYWJ0NjRrMGVvajJrcHlrOTNqZ3FiZCJ9.7f6Qjb8Mk5lGWrf6BKPUXA';
 
+
     const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: [-79.4512, 43.6568],
-      zoom: 8
+      container: 'map', 
+      style: 'mapbox://styles/mapbox/streets-v12', 
+      center: [-79.4512, 43.6568], 
+      zoom: 8 
     });
+
 
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
@@ -31,7 +32,10 @@ export default {
       placeholder: 'Search for places',
     });
 
+
     map.addControl(geocoder);
+
+
 
     geocoder.on('result', (e) => {
       const coords = e.result.geometry.coordinates;
@@ -40,7 +44,7 @@ export default {
         .addTo(map);
     });
   },
-  methods: {
+    methods: {
     goHome() {
       this.$router.push('/HomePage'); // Navigate to the HomePage route
     }
@@ -51,7 +55,7 @@ export default {
 <style scoped>
 .map-container {
   position: absolute;
-  top: 40px; /* Adjusted for the back button */
+  top: 0;
   bottom: 0;
   width: 100%;
 }
