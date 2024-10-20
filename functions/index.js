@@ -27,7 +27,7 @@ exports.sendEmail = onRequest((request, response) => {
       }));
       const mailjet = Mailjet.apiConnect(
           "dd25224982b214309b41c3d59cf4e35b",
-          "33514d9dc69af3a19f7fd2da5f843ab5",
+          "22248b95bbbf20b1fe0e224ab75b7e75",
       );
 
       const emailRequest = mailjet.post("send", {version: "v6.0.6"}).request({

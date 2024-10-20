@@ -108,7 +108,6 @@ import { ref } from 'vue'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 import { getFirestore, doc, setDoc } from 'firebase/firestore'
-import axios from 'axios'
 
 // Initialize Firestore
 const db = getFirestore()
@@ -135,56 +134,22 @@ const userId = ref(null)  // To store user ID for later role update
 const router = useRouter()
 const auth = getAuth()
 
-// Validation functions (same as before)
+// Validation functions
 const validateName = (blur) => {
-  if (formData.value.username.length < 3) {
-    errors.value.username = blur ? 'Name must be at least 3 characters long' : null
-  } else {
-    errors.value.username = null
-  }
+  errors.value.username = formData.value.username.length < 3 && blur ? 'Name must be at least 3 characters long' : null
 }
 
 const validateEmail = (blur) => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailPattern.test(formData.value.email)) {
-    errors.value.email = blur ? 'Invalid email format' : null
-  } else {
-    errors.value.email = null
-  }
+  errors.value.email = !emailPattern.test(formData.value.email) && blur ? 'Invalid email format' : null
 }
 
 const validatePassword = (blur) => {
-  const password = formData.value.password
-  const minLength = 8
-  if (password.length < minLength) {
-    errors.value.password = blur ? `Password must be at least ${minLength} characters long.` : null
-  } else {
-    errors.value.password = null
-  }
+  errors.value.password = formData.value.password.length < 8 && blur ? 'Password must be at least 8 characters long' : null
 }
 
 const validateConfirmPassword = (blur) => {
-  if (formData.value.password !== formData.value.confirmPassword) {
-    errors.value.confirmPassword = blur ? 'Passwords do not match' : null
-  } else {
-    errors.value.confirmPassword = null
-  }
-}
-
-// Send welcome email function (same as before)
-const sendWelcomeEmail = async (email) => {
-  try {
-    const response = await axios.get('https://sendemail-23kcp2q4ca-uc.a.run.app', {
-      params: {
-        from: 'liuqinyi1927@gmail.com',
-        to: email,
-        subject: 'Welcome to Social Food Website',
-      },
-    });
-    console.log('Welcome email sent successfully:', response.data);
-  } catch (error) {
-    console.error('Failed to send welcome email:', error);
-  }
+  errors.value.confirmPassword = formData.value.password !== formData.value.confirmPassword && blur ? 'Passwords do not match' : null
 }
 
 const submitForm = async () => {
@@ -193,18 +158,13 @@ const submitForm = async () => {
   validatePassword(true)
   validateConfirmPassword(true)
 
-  if (errors.value.username || errors.value.email || errors.value.password || errors.value.confirmPassword) {
-    return
-  }
+  if (Object.values(errors.value).some(error => error)) return
 
   try {
-
     const userCredential = await createUserWithEmailAndPassword(auth, formData.value.email, formData.value.password)
-    const user = userCredential.user
-    userId.value = user.uid  
+    userId.value = userCredential.user.uid
 
-
-    await setDoc(doc(db, 'users', user.uid), {
+    await setDoc(doc(db, 'users', userId.value), {
       username: formData.value.username,
       email: formData.value.email,
       role: 'user',
@@ -213,19 +173,7 @@ const submitForm = async () => {
 
     successMessage.value = 'Sign up successful!'
 
- 
-    const userEmail = formData.value.email
-    formData.value = {
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      isAustralianResident: 'no'
-    }
-
- 
-    await sendWelcomeEmail(userEmail)
-
+    formData.value = { username: '', email: '', password: '', confirmPassword: '', isAustralianResident: 'no' }
 
     showAdminPrompt.value = true
   } catch (error) {
@@ -234,23 +182,19 @@ const submitForm = async () => {
 }
 
 const setRole = async (role) => {
-  if (userId.value) {
-    try {
-      await setDoc(doc(db, 'users', userId.value), { role }, { merge: true })
-      successMessage.value = `You are now registered as a ${role}!`
-    } catch (error) {
-      console.error('Error updating role:', error)
-    }
+  if (!userId.value) return
+  try {
+    await setDoc(doc(db, 'users', userId.value), { role }, { merge: true })
+    successMessage.value = `You are now registered as a ${role}!`
+    showAdminPrompt.value = false
+    setTimeout(() => router.push('/FirebaseSigninView'), 2000)
+  } catch (error) {
+    console.error('Error updating role:', error)
   }
-  showAdminPrompt.value = false
-  setTimeout(() => {
-    router.push('/FirebaseSigninView')
-  }, 2000)
 }
 </script>
 
 <style scoped>
-
 .container {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   max-width: 80vw;

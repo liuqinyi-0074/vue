@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "start": "node server.js",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "lint": "eslint . --fix --ignore-pattern .gitignore",
     "format": "prettier --write src/"
   },
   "dependencies": {
@@ -41,11 +41,13 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
     "@vitejs/plugin-vue": "^5.0.5",
-    "@vue/eslint-config-prettier": "^9.0.0",
+    "@vue/eslint-config-prettier": "^10.0.0",
     "chai": "^5.1.1",
     "chai-http": "^5.1.1",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-plugin-vue": "^9.23.0",
     "mocha": "^10.7.3",
     "prettier": "^3.2.5",
